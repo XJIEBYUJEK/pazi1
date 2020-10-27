@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../lib/tommath.h
+stdint.h
+-
+stddef.h
+-
+limits.h
+-
+stdio.h
+-
+
+/cygdrive/c/Users/igors/CLionProjects/untitled/main.c
+stdio.h
+-
+stdlib.h
+-
+inttypes.h
+-
+tommath.h
+/cygdrive/c/Users/igors/CLionProjects/untitled/tommath.h
+
