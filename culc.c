@@ -156,3 +156,23 @@ void pointsAddition (struct Point *result, const struct Point *point1, const str
     mp_copy(&T5, &result->Z);                        //    Z3 = T5
     mp_clear_multi(&T1, &T2, &T3, &T4, &T5, &T6, &T7, &T8, &P, NULL);
 }
+
+void affineCoordinatesConversion (struct Point *result, const struct Point *point, const struct Curve *curve)
+{
+    mp_int x, y;
+    mp_init_multi(&x, &y, NULL);
+
+    // x
+    mp_invmod(&point->Z, &curve->p, &x);
+    mp_mulmod(&x, &point->X, &curve->p, &x);
+
+    // y
+    mp_invmod(&point->Z, &curve->p, &y);
+    mp_sqrmod(&y, &curve->p, &y);
+    mp_mulmod(&y, &point->Y, &curve->p, &y);
+
+    mp_copy(&x, &result->X);
+    mp_copy(&y, &result->Y);
+    mp_clear_multi(&x, &y, NULL);
+}
+

@@ -21,3 +21,5 @@ void initCurve(struct Curve *curve);
 void curveCreate (struct Curve *curve);
 // Сложение двух точек
 void pointsAddition (struct Point *result, const struct Point *point1, const struct Point *point2, const struct Curve *curve);
+// Перевод из проективных в афинные координаты
+void affineCoordinatesConversion (struct Point *result, const struct Point *point, const struct Curve *curve);
