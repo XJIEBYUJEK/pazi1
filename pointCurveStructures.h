@@ -19,3 +19,5 @@ void printAffinePoint(const struct Point *point);
 void initCurve(struct Curve *curve);
 // Создание кривой
 void curveCreate (struct Curve *curve);
+// Сложение двух точек
+void pointsAddition (struct Point *result, const struct Point *point1, const struct Point *point2, const struct Curve *curve);
