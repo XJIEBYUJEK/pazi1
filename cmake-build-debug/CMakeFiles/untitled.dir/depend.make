@@ -3,6 +3,7 @@
 
 CMakeFiles/untitled.dir/culc.c.o: ../lib/tommath.h
 CMakeFiles/untitled.dir/culc.c.o: ../culc.c
+CMakeFiles/untitled.dir/culc.c.o: ../parametrs.h
 CMakeFiles/untitled.dir/culc.c.o: ../pointCurveStructures.h
 
 CMakeFiles/untitled.dir/main.c.o: ../lib/tommath.h
