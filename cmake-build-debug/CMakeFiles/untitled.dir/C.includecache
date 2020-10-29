@@ -21,8 +21,16 @@ stdio.h
 -
 stdlib.h
 -
-inttypes.h
--
+tommath.h
+/cygdrive/c/Users/igors/CLionProjects/untitled/tommath.h
+parametrs.h
+/cygdrive/c/Users/igors/CLionProjects/untitled/parametrs.h
+pointCurveStructures.h
+/cygdrive/c/Users/igors/CLionProjects/untitled/pointCurveStructures.h
+
+/cygdrive/c/Users/igors/CLionProjects/untitled/parametrs.h
+
+/cygdrive/c/Users/igors/CLionProjects/untitled/pointCurveStructures.h
 tommath.h
 /cygdrive/c/Users/igors/CLionProjects/untitled/tommath.h
 

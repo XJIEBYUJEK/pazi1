@@ -143,6 +143,33 @@ untitled/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/build
 .PHONY : untitled/fast
 
+culc.o: culc.c.o
+
+.PHONY : culc.o
+
+# target to build an object file
+culc.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/culc.c.o
+.PHONY : culc.c.o
+
+culc.i: culc.c.i
+
+.PHONY : culc.i
+
+# target to preprocess a source file
+culc.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/culc.c.i
+.PHONY : culc.c.i
+
+culc.s: culc.c.s
+
+.PHONY : culc.s
+
+# target to generate assembly for a file
+culc.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/culc.c.s
+.PHONY : culc.c.s
+
 main.o: main.c.o
 
 .PHONY : main.o
@@ -179,6 +206,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... untitled"
+	@echo "... culc.o"
+	@echo "... culc.i"
+	@echo "... culc.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

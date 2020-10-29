@@ -4,6 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
+  "/cygdrive/c/Users/igors/CLionProjects/untitled/culc.c" "/cygdrive/c/Users/igors/CLionProjects/untitled/cmake-build-debug/CMakeFiles/untitled.dir/culc.c.o"
   "/cygdrive/c/Users/igors/CLionProjects/untitled/main.c" "/cygdrive/c/Users/igors/CLionProjects/untitled/cmake-build-debug/CMakeFiles/untitled.dir/main.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")

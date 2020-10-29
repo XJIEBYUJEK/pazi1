@@ -78,7 +78,16 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/cygdrive/c/Users/igors/CLionProjects/untitled/culc.c">
+			<Option target="untitled"/>
+		</Unit>
 		<Unit filename="/cygdrive/c/Users/igors/CLionProjects/untitled/main.c">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/cygdrive/c/Users/igors/CLionProjects/untitled/parametrs.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/cygdrive/c/Users/igors/CLionProjects/untitled/pointCurveStructures.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/cygdrive/c/Users/igors/CLionProjects/untitled/CMakeLists.txt">
