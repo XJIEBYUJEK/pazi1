@@ -8,6 +8,10 @@ void initPoint(struct Point *point){
     mp_init(&point->Z);
 }
 
+void clearPoint(struct Point *point){
+    mp_clear_multi(&point->X, &point->Y, &point->Z, NULL);
+}
+
 void customPointInit16 (struct Point *point, char *X, char *Y, char *Z)
 {
     mp_read_radix(&point->X, X, 16);
@@ -58,6 +62,10 @@ void initCurve(struct Curve *curve){
     mp_init(&curve->q);
 }
 
+void clearCurve(struct Curve *curve){
+    mp_clear_multi(&curve->X, &curve->Y, &curve->Z, &curve->x, &curve->y, &curve->theta, &curve->a, &curve->e, &curve->d, &curve->p, &curve->q, NULL);
+}
+
 void curveCreate (struct Curve *curve)
 {
     mp_int temp;
@@ -95,12 +103,12 @@ void curveCreate (struct Curve *curve)
     mp_addmod(&curve->X, &curve->X, &curve->p, &curve->X);
 
     // Y = (2 * x + theta) * (x - theta)^2 - y^2
-    mp_addmod(&curve->x, &curve->x, &curve->p, &curve->Y);                        // Y = 2 * x
-    mp_addmod(&curve->Y, &curve->theta, &curve->p, &curve->Y);                       // Y = 2 * x + theta
-    mp_submod(&curve->x, &curve->theta, &curve->p, &temp);                   // temp = x - theta
-    mp_sqrmod(&temp, &curve->p, &temp);                                     // temp = (x - theta)^2
-    mp_addmod(&curve->Y, &temp, &curve->p, &curve->Y);                      // Y = (2 * x + theta) * (x - theta)^2
-    mp_sqrmod(&curve->y, &curve->p, &temp);                         // temp = y^2
+    mp_addmod(&curve->x, &curve->x, &curve->p, &curve->Y);         // Y = 2 * x
+    mp_addmod(&curve->Y, &curve->theta, &curve->p, &curve->Y);     // Y = 2 * x + theta
+    mp_submod(&curve->x, &curve->theta, &curve->p, &temp);         // temp = x - theta
+    mp_sqrmod(&temp, &curve->p, &temp);                            // temp = (x - theta)^2
+    mp_mulmod(&curve->Y, &temp, &curve->p, &curve->Y);             // Y = (2 * x + theta) * (x - theta)^2
+    mp_sqrmod(&curve->y, &curve->p, &temp);                        // temp = y^2
     mp_submod(&curve->Y, &temp, &curve->p, &curve->Y);             // Y = (2 * x + theta) * (x - theta)^2 - y^2
 
     // Z = y
@@ -176,3 +184,50 @@ void affineCoordinatesConversion (struct Point *result, const struct Point *poin
     mp_clear_multi(&x, &y, NULL);
 }
 
+void negativePoint (struct Point *result, const struct Point *point){
+    mp_neg(&point->X, &result->X);
+    mp_copy(&point->Y, &result->Y);
+    mp_copy(&point->Z, &result->Z);
+}
+void basePoint (struct Point *result, const struct Curve *curve){
+    mp_copy(&curve->X, &result->X);
+    mp_copy(&curve->Y, &result->Y);
+    mp_copy(&curve->Z, &result->Z);
+}
+
+
+
+_Bool pointOnCurve (const struct Curve *curve, const struct Point *point)
+{
+
+    _Bool result;
+
+    mp_int temp1, temp2, temp3, P;
+    mp_init_multi(&temp1, &temp2, &temp3, &P, NULL);
+    //Y^2 = e * X^4 - 2 * d * X^2 * Z^2 + Z^4
+    mp_copy(&curve->p, &P);
+    mp_set_i32(&temp1, 4);                                    // temp1 = 4
+    mp_exptmod(&point->X, &temp1, &P, &temp2);                   // temp2 = X^4
+    mp_mulmod(&temp2, &curve->e, &P, &temp2);                    // temp2 = e * X^4
+    mp_exptmod(&point->Z, &temp1, &P, &temp3);                   // temp3 = Z^4
+    mp_addmod(&temp2, &temp3, &P, &temp2);                       // temp2 = e * X^4 + Z^4
+    mp_mulmod(&point->Z, &point->Z, &P, &temp3);                 // temp3 = Z^2
+    mp_addmod(&temp3, &temp3, &P, &temp3);                       // temp3 = 2 * Z^2
+    mp_mulmod(&temp3, &curve->d, &P, &temp3);                    // temp3 = 2 * d * Z^2
+    mp_mulmod(&point->X, &point->X, &P, &temp1);                 // temp1 = X^2
+    mp_mulmod(&temp3, &temp1, &P, &temp3);                       // temp3 = 2 * d * Z^2 * X^2
+    mp_submod(&temp2, &temp3, &P, &temp2);                       // temp2 = e * X^4 + Z^4 - 2 * d * Z^2 * X^2
+    mp_mulmod(&point->Y, &point->Y, &P, &temp3);                 // temp3 = Y^2
+    mp_submod(&temp2, &temp3, &P, &temp2);                       // temp2 = e * X^4 + Z^4 - 2 * d * Z^2 * X^2 - Y^2
+    mp_zero(&temp1);                                             // temp1 = 0
+    if (mp_cmp(&temp1, &temp2) == MP_EQ){
+        result = 1;
+    }
+    else{
+        result = 0;
+    }
+
+    mp_clear_multi(&temp1, &temp2, &temp3, &P, NULL);
+
+    return result;
+}
