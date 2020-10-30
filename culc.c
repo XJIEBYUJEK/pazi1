@@ -39,10 +39,9 @@ void initCurve(struct Curve *curve){
     mp_init(&curve->d);
     mp_init(&curve->p);
     mp_init(&curve->q);
-    mp_init(&curve->m);
 }
 void clearCurve(struct Curve *curve){
-    mp_clear_multi(&curve->X, &curve->Y, &curve->Z, &curve->x, &curve->y, &curve->theta, &curve->a, &curve->e, &curve->d, &curve->p, &curve->q, curve->m, NULL);
+    mp_clear_multi(&curve->X, &curve->Y, &curve->Z, &curve->x, &curve->y, &curve->theta, &curve->a, &curve->e, &curve->d, &curve->p, &curve->q, NULL);
 }
 void curveCreate (struct Curve *curve)
 {
@@ -55,7 +54,7 @@ void curveCreate (struct Curve *curve)
     mp_read_radix(&curve->y, y_, 16);
     mp_read_radix(&curve->p, p_, 16);
     mp_read_radix(&curve->q, q_, 16);
-    mp_read_radix(&curve->m, m_, 16);
+
 
     // e = (-(3 * theta^2 + 4 * a)) / 16
     mp_sqrmod(&curve->theta, &curve->p, &curve->e);                              // e = theta ^2
@@ -108,41 +107,39 @@ void pointsAddition (struct Point *result, const struct Point *point1, const str
     mp_copy(&point2->X, &T4);                       //    T4 = X2
     mp_copy(&point2->Y, &T5);                       //    T5 = Y2
     mp_copy(&point2->Z, &T6);                       //    T6 = Z2
-    mp_mulmod(&T1, &T3, &curve->p, &T7);                        //    T7 = T1*T3 = X1 * Z1
-    mp_addmod(&T2, &T7, &curve->p, &T7);                        //    T7 = T2+T7 = X1 * Z1 + Y1
-    mp_mulmod(&T4, &T6, &curve->p, &T8);                        //    T8 = T4*T6 = X2 * Z2
-    mp_addmod(&T5, &T8, &curve->p, &T8);                        //    T8 = T5+T8 = X2 * Z2 + Y2
-    mp_mulmod(&T2, &T5, &curve->p, &T2);                        //    T2 = T2*T5 = Y1 * Y2
-    mp_mulmod(&T7, &T8, &curve->p, &T7);                        //    T7 = T7*T8 = (X1 * Z1 + Y1) * (X2 * Z2 + Y2)
-    mp_submod(&T7, &T2, &curve->p, &T7);                      //    T7 = T7-T2
-    mp_mulmod(&T1, &T4, &curve->p, &T5);                        //    T5 = T1*T4
-    mp_addmod(&T1, &T3, &curve->p, &T1);                       //    T1 = T1+T3
-    mp_mulmod(&T3, &T6, &curve->p, &T8);                         //    T8 = T3*T6
-    mp_addmod(&T4, &T6, &curve->p, &T4);                        //    T4 = T4+T6
-    mp_mulmod(&T5, &T8, &curve->p, &T6);                        //    T6 = T5*T8
-    mp_submod(&T7, &T6, &curve->p, &T7);                        //    T7 = T7-T6
-    mp_mulmod(&T1, &T4, &curve->p, &T1);                        //    T1 = T1*T4
-    mp_submod(&T1, &T5, &curve->p, &T1);                         //    T1 = T1-T5
-    mp_submod(&T1, &T8, &curve->p, &T1);                        //    T1 = T1-T8
-    mp_sqrmod(&T1, &curve->p, &T3);                        //    T3 = T1^2
-    mp_addmod(&T6, &T6, &curve->p, &T6);                        //    T6 = 2*T6
-    mp_submod(&T3, &T6, &curve->p, &T3);                        //    T3 = T3-T6
-    mp_mulmod(&curve->e, &T6, &curve->p, &T4);   // T4 = 2 * e * X1 * X2 * Z1 * Z2
-    mp_mulmod(&T3, &T4, &curve->p, &T3);// T3 = 2 * e * X1 * X2 * Z1 * Z
-    mp_mulmod(&curve->d, &T6, &curve->p, &T4);                        //    T4 = d*T6
-    mp_submod(&T2, &T4, &curve->p, &T2);                        //    T2 = T2+T4
-    mp_sqrmod(&T8, &curve->p, &T4);                        //    T4 = T8^2
-    mp_sqrmod(&T5, &curve->p, &T8);                        //    T8 = T5^2
-    mp_mulmod(&T8, &curve->e, &curve->p, &T8);
-    mp_addmod(&T8, &T4, &curve->p, &T5);                        //    T5 = T4+T8
-    mp_mulmod(&T2, &T5, &curve->p, &T2);                         //    T2 = T2*T5
-    mp_addmod(&T2, &T3, &curve->p, &T2);                        //    T2 = T2+T3
-    mp_submod(&T4, &T8, &curve->p, &T5);                         //    T5 = T4-T8
-    mp_copy(&T7, &result->X);                        //    X3 = T7
-    mp_copy(&T2, &result->Y);                        //    Y3 = T2
-    mp_copy(&T5, &result->Z);                        //    Z3 = T5
-
-
+    mp_mulmod(&T1, &T3, &curve->p, &T7);            //    T7 = T1*T3
+    mp_addmod(&T2, &T7, &curve->p, &T7);            //    T7 = T2+T7
+    mp_mulmod(&T4, &T6, &curve->p, &T8);            //    T8 = T4*T6
+    mp_addmod(&T5, &T8, &curve->p, &T8);            //    T8 = T5+T8
+    mp_mulmod(&T2, &T5, &curve->p, &T2);            //    T2 = T2*T5
+    mp_mulmod(&T7, &T8, &curve->p, &T7);            //    T7 = T7*T8
+    mp_submod(&T7, &T2, &curve->p, &T7);            //    T7 = T7-T2
+    mp_mulmod(&T1, &T4, &curve->p, &T5);            //    T5 = T1*T4
+    mp_addmod(&T1, &T3, &curve->p, &T1);            //    T1 = T1+T3
+    mp_mulmod(&T3, &T6, &curve->p, &T8);            //    T8 = T3*T6
+    mp_addmod(&T4, &T6, &curve->p, &T4);            //    T4 = T4+T6
+    mp_mulmod(&T5, &T8, &curve->p, &T6);            //    T6 = T5*T8
+    mp_submod(&T7, &T6, &curve->p, &T7);            //    T7 = T7-T6
+    mp_mulmod(&T1, &T4, &curve->p, &T1);            //    T1 = T1*T4
+    mp_submod(&T1, &T5, &curve->p, &T1);            //    T1 = T1-T5
+    mp_submod(&T1, &T8, &curve->p, &T1);            //    T1 = T1-T8
+    mp_sqrmod(&T1, &curve->p, &T3);                 //    T3 = T1^2
+    mp_addmod(&T6, &T6, &curve->p, &T6);            //    T6 = 2*T6
+    mp_submod(&T3, &T6, &curve->p, &T3);            //    T3 = T3-T6
+    mp_mulmod(&curve->e, &T6, &curve->p, &T4);      //    T4 = e*T6
+    mp_mulmod(&T3, &T4, &curve->p, &T3);            //    T3 = T3*T4
+    mp_mulmod(&curve->d, &T6, &curve->p, &T4);      //    T4 = d*T6
+    mp_submod(&T2, &T4, &curve->p, &T2);            //    T2 = T2-T4
+    mp_sqrmod(&T8, &curve->p, &T4);                 //    T4 = T8^2
+    mp_sqrmod(&T5, &curve->p, &T8);                 //    T8 = T5^2
+    mp_mulmod(&T8, &curve->e, &curve->p, &T8);      //    T8 = e*T8
+    mp_addmod(&T8, &T4, &curve->p, &T5);            //    T5 = T4+T8
+    mp_mulmod(&T2, &T5, &curve->p, &T2);            //    T2 = T2*T5
+    mp_addmod(&T2, &T3, &curve->p, &T2);            //    T2 = T2+T3
+    mp_submod(&T4, &T8, &curve->p, &T5);            //    T5 = T4-T8
+    mp_copy(&T7, &result->X);                       //    X3 = T7
+    mp_copy(&T2, &result->Y);                       //    Y3 = T2
+    mp_copy(&T5, &result->Z);                       //    Z3 = T5
 
     mp_clear_multi(&T1, &T2, &T3, &T4, &T5, &T6, &T7, &T8, NULL);
 }
@@ -163,18 +160,6 @@ void affineCoordinatesConversion (struct Point *result, const struct Point *poin
     mp_copy(&x, &result->X);
     mp_copy(&y, &result->Y);
     mp_clear_multi(&x, &y, NULL);
-}
-void printAffinePoint(const struct Point *point, const  struct Curve *curve){
-    struct Point temp;
-    initPoint(&temp);
-    affineCoordinatesConversion(&temp, point, curve);
-    char stroka[150] = "";
-    mp_to_radix(&temp.X, stroka, 150, NULL, 10);
-    printf("\nx = %s", stroka);
-    stroka[150] = "";
-    mp_to_radix(&temp.Y, stroka, 150, NULL, 10);
-    printf("\ny = %s", stroka);
-    stroka[150] = "";
 }
 void negativePoint (struct Point *result, const struct Point *point){
     mp_neg(&point->X, &result->X);
@@ -229,38 +214,6 @@ _Bool pointOnCurve (const struct Point *point, const struct Curve *curve)
 
     return result;
 }
-void montgomeryLadder (struct Point *result, const struct Point *point, const struct Curve *curve, const mp_int k){
-
-    int bits = mp_count_bits(&k);
-
-    struct Point R,Q;
-    initPoint(&R); initPoint(&Q);
-
-    mp_copy(&point->X, &R.X);                       // R = P
-    mp_copy(&point->Y, &R.Y);
-    mp_copy(&point->Z, &R.Z);
-
-    createPoint(&Q, "0", "1", "1");  // Q = O
-    int flag;
-    for (int i = bits - 1; i >= 0; i--)
-    {
-        if ( mp_get_bit(&k, i) )
-        {
-            pointsAddition (&Q, &Q, &R, curve);     // Q = Q + R
-            pointsAddition (&R, &R, &R, curve);     // R = 2 * R
-        }
-        else
-        {
-            pointsAddition (&R, &R, &Q, curve);     // R = Q + R
-            pointsAddition (&Q, &Q, &Q, curve);     // Q = 2 * Q
-        }
-    }
-    mp_copy(&Q.X, &result->X);
-    mp_copy(&Q.Y, &result->Y);
-    mp_copy(&Q.Z, &result->Z);
-
-    clearPoint(&Q); clearPoint(&R);
-}
 void binaryMethod(struct Point *result, const struct Point *P, const struct Curve *curve, const mp_int *k) { // Лекции, слайд 53
     struct Point Q;
     initPoint(&Q);
@@ -275,5 +228,4 @@ void binaryMethod(struct Point *result, const struct Point *P, const struct Curv
     mp_copy(&Q.X, &result->X);
     mp_copy(&Q.Y, &result->Y);
     mp_copy(&Q.Z, &result->Z);
-
 }

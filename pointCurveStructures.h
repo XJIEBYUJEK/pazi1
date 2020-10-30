@@ -13,9 +13,8 @@ void initPoint(struct Point *point);
 void clearPoint(struct Point *point);
 // Создание точки с произовльными координатами заданными в 10-ой системе счисления
 void createPoint (struct Point *point, char *X, char *Y, char *Z);
-// Вывод точки в проективных и афинных координатах соответственно
+// Вывод точки в проективных координатах
 void printProjectivePoint(const struct Point *point);
-void printAffinePoint(const struct Point *point, const  struct Curve *curve);
 // Инициализация кривой
 void initCurve(struct Curve *curve);
 // Удаление кривой
@@ -35,5 +34,4 @@ _Bool pointOnCurve (const struct Point *point, const struct Curve *curve);
 // Равенство двух точек
 _Bool pointsEquality(const struct Point *point1, const struct Point *point2, const struct Curve *curve);
 // Бинарный метод нахождения кратной точки
-//void montgomeryLadder (struct Point *result, const struct Point *point, const struct Curve *curve, const mp_int k);
 void binaryMethod(struct Point *result, const struct Point *P, const struct Curve *curve, const mp_int *k);
