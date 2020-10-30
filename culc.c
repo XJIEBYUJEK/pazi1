@@ -10,7 +10,7 @@ void initPoint(struct Point *point){
 void clearPoint(struct Point *point){
     mp_clear_multi(&point->X, &point->Y, &point->Z, NULL);
 }
-void customPointInit (struct Point *point, char *X, char *Y, char *Z)
+void createPoint (struct Point *point, char *X, char *Y, char *Z)
 {
     mp_read_radix(&point->X, X, 10);
     mp_read_radix(&point->Y, Y, 10);
@@ -197,7 +197,7 @@ _Bool pointsEquality(const struct Point *point1, const struct Point *point2, con
     return  (mp_cmp(&temp.X, &temp2.X) == MP_EQ) && (mp_cmp(&temp.Y, &temp2.Y) == MP_EQ) ;
     clearPoint(&temp); clearPoint(&temp2);
 }
-_Bool pointOnCurve (const struct Curve *curve, const struct Point *point)
+_Bool pointOnCurve (const struct Point *point, const struct Curve *curve)
 {
     int err;
     _Bool result;
@@ -240,7 +240,7 @@ void montgomeryLadder (struct Point *result, const struct Point *point, const st
     mp_copy(&point->Y, &R.Y);
     mp_copy(&point->Z, &R.Z);
 
-    customPointInit(&Q, "0", "1", "1");  // Q = O
+    createPoint(&Q, "0", "1", "1");  // Q = O
     int flag;
     for (int i = bits - 1; i >= 0; i--)
     {
@@ -264,7 +264,7 @@ void montgomeryLadder (struct Point *result, const struct Point *point, const st
 void binaryMethod(struct Point *result, const struct Point *P, const struct Curve *curve, const mp_int *k) { // Лекции, слайд 53
     struct Point Q;
     initPoint(&Q);
-    customPointInit(&Q, "0", "1", "1");  // Q = O
+    createPoint(&Q, "0", "1", "1");  // Q = O
     int bits = mp_count_bits(k);
 
     for (int i = bits - 1; i >= 0; --i) {
