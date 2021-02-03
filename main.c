@@ -16,7 +16,13 @@ int main()
     initCurve(&jacob);
     curveCreate(&jacob);
     basePoint(&P, &jacob);
-    printf("\nКоординаты точки P: ");
+    mp_to_radix(&jacob.e, stroka, 150, NULL, 10);
+    printf("\nЗначение коэффициента e: = %s", stroka);
+    mp_to_radix(&jacob.d, stroka, 150, NULL, 10);
+    printf("\nЗначение коэффициента d: = %s", stroka);
+
+
+    printf("\n\nКоординаты точки P: ");
     printProjectivePoint(&P);
     if (pointOnCurve(&P, &jacob)) {
         printf("\nТочка P лежит на кривой");
@@ -35,7 +41,7 @@ int main()
 
     //test 1
 
-    printf("\nТест №1, проверим лежит ли Q на кривой:");
+    printf("\n\nТест №1, проверим лежит ли Q на кривой:");
     if (pointOnCurve(&Q, &jacob)) {
         printf("\nТочка Q лежит на кривой");
     }
